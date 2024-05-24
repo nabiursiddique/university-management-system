@@ -1,10 +1,12 @@
 import { Schema, model } from 'mongoose';
+import bcrypt from 'bcrypt';
 import {
   TGuardian,
   TLocalGuardian,
   TStudent,
   TUserName,
 } from './student.interface';
+import config from '../../config';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -148,6 +150,21 @@ const studentSchema = new Schema<TStudent>({
     type: Boolean,
     default: false,
   },
+});
+
+// pre save middleware / hook (cryptic password)
+studentSchema.pre('save', async function (next) {
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_round),
+  );
+  next();
+});
+
+// post save middleware / hook
+studentSchema.post('save', function () {
+  console.log('post save middleware');
 });
 
 export const Student = model<TStudent>('Student', studentSchema);
