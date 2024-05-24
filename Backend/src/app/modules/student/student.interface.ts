@@ -1,5 +1,3 @@
-import { Model } from 'mongoose';
-
 export type TUserName = {
   firstName: string;
   middleName?: string;
