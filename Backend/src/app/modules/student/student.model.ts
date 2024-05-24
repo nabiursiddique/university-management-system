@@ -163,8 +163,9 @@ studentSchema.pre('save', async function (next) {
 });
 
 // post save middleware / hook
-studentSchema.post('save', function () {
-  console.log('post save middleware');
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
 });
 
 export const Student = model<TStudent>('Student', studentSchema);
