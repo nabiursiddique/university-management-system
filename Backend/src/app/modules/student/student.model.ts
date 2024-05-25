@@ -1,12 +1,10 @@
 import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
 import {
   TGuardian,
   TLocalGuardian,
   TStudent,
   TUserName,
 } from './student.interface';
-import config from '../../config';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -88,11 +86,6 @@ const studentSchema = new Schema<TStudent>(
       unique: true,
       ref: 'User',
     },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      maxLength: [20, "Password can't be more then 20 character"],
-    },
     name: {
       type: userNameSchema,
       trim: true,
@@ -161,24 +154,6 @@ const studentSchema = new Schema<TStudent>(
 // we use virtual to show data to user that is created based on other data on the db but this data is not stored in the db
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
-});
-
-//* Document middleware
-// pre save middleware / hook (cryptic password)
-studentSchema.pre('save', async function (next) {
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_round),
-  );
-  next();
-});
-
-// post save middleware / hook
-studentSchema.post('save', function (doc, next) {
-  // we are hiding the cryptic password to the user in response data
-  doc.password = '';
-  next();
 });
 
 //* Query middleware
