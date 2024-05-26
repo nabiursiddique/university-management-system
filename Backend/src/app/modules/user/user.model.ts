@@ -39,6 +39,7 @@ const userSchema = new Schema<TUser>(
 //* Document middleware
 // pre save middleware / hook (cryptic password)
 userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   user.password = await bcrypt.hash(
     user.password,
