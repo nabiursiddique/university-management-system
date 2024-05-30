@@ -12,6 +12,11 @@ const getAllAcademicDepartmentsFromDB = async () => {
 };
 
 const getSingleAcademicDepartmentFromDB = async (id: string) => {
+  const isDepartmentExists = await AcademicDepartment.findOne({ _id: id });
+  if (!isDepartmentExists) {
+    throw new Error('This department does not exists');
+  }
+
   const result = await AcademicDepartment.findById(id);
   return result;
 };
