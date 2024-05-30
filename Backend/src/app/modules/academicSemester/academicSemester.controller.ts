@@ -24,7 +24,7 @@ const getAllAcademicSemesters: RequestHandler = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'All academic semesters are retrived',
+    message: 'All academic semesters are retrieved',
     data: result,
   });
 });
@@ -40,7 +40,7 @@ const getSingleAcademicSemester: RequestHandler = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'All academic semesters are retrived',
+      message: 'Academic semesters are retrieved',
       data: result,
     });
   },
