@@ -97,55 +97,46 @@ const createStudentValidationSchema = z.object({
 
 // update validation schema
 const updateUserNameValidationSchema = z.object({
-  firstName: z
-    .string()
-    .min(1)
-    .max(15, {
-      message: 'Maximum allowed length for first name is 15 characters',
-    })
-    .trim()
-    .optional(),
-  middleName: z.string().trim().optional(),
-  lastName: z.string().trim().optional(),
+  firstName: z.string().min(1).max(20).optional(),
+  middleName: z.string().optional(),
+  lastName: z.string().optional(),
 });
 
 const updateGuardianValidationSchema = z.object({
-  fatherName: z.string().trim().optional(),
+  fatherName: z.string().optional(),
   fatherOccupation: z.string().optional(),
   fatherContactNo: z.string().optional(),
-  motherName: z.string().trim().optional(),
+  motherName: z.string().optional(),
   motherOccupation: z.string().optional(),
   motherContactNo: z.string().optional(),
 });
 
 const updateLocalGuardianValidationSchema = z.object({
-  name: z.string().trim().optional(),
+  name: z.string().optional(),
   occupation: z.string().optional(),
   contactNo: z.string().optional(),
   address: z.string().optional(),
 });
 
-const updateStudentValidationSchema = z.object({
+export const updateStudentValidationSchema = z.object({
   body: z.object({
     student: z.object({
       name: updateUserNameValidationSchema,
-      gender: z.enum(['male', 'female']).optional(),
+      gender: z.enum(['male', 'female', 'other']).optional(),
       dateOfBirth: z.string().optional(),
-      email: z.string().email({ message: 'Invalid email format' }).optional(),
-      contactNumber: z.string().optional(),
+      email: z.string().email().optional(),
+      contactNo: z.string().optional(),
       emergencyContactNo: z.string().optional(),
-      bloodGroup: z
-        .enum(['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])
-        .optional()
-        .refine((val) => val === undefined || val.length > 0, {
-          message: 'Invalid blood group',
-        }),
+      bloogGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
       presentAddress: z.string().optional(),
       permanentAddress: z.string().optional(),
-      guardian: updateGuardianValidationSchema,
-      localGuardian: updateLocalGuardianValidationSchema,
-      admissionSemester: z.string(),
+      guardian: updateGuardianValidationSchema.optional(),
+      localGuardian: updateLocalGuardianValidationSchema.optional(),
+      admissionSemester: z.string().optional(),
       profileImg: z.string().optional(),
+      academicDepartment: z.string().optional(),
     }),
   }),
 });
