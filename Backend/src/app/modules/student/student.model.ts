@@ -183,4 +183,10 @@ studentSchema.pre('aggregate', function (next) {
   next();
 });
 
+// creating a custom static method to find out if a user exists or not
+studentSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await Student.findOne({ id });
+  return existingUser;
+};
+
 export const Student = model<TStudent>('Student', studentSchema);
