@@ -161,7 +161,7 @@ const studentSchema = new Schema<TStudent>(
 //* Virtual
 // we use virtual to show data to user that is created based on other data on the db but this data is not stored in the db
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+  return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.lastName}`;
 });
 
 //* Query middleware
