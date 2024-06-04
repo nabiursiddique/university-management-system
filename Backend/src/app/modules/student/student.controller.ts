@@ -17,20 +17,20 @@ const getAllStudents = catchAsync(async (req, res) => {
 
 //* get single student from the database
 const getSingleStudent: RequestHandler = catchAsync(async (req, res) => {
-  const { studentId } = req.params;
-  const result = await StudentServices.getSingleStudentFromDB(studentId);
+  const { id } = req.params;
+  const result = await StudentServices.getSingleStudentFromDB(id);
   if (result !== null) {
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: `student with id ${studentId} retrieved successfully.`,
+      message: `student with id ${id} retrieved successfully.`,
       data: result,
     });
   } else {
     sendResponse(res, {
       statusCode: httpStatus.NOT_FOUND,
       success: false,
-      message: `student with id ${studentId} not found.`,
+      message: `student with id ${id} not found.`,
       data: '',
     });
   }
@@ -38,25 +38,25 @@ const getSingleStudent: RequestHandler = catchAsync(async (req, res) => {
 
 //* Updating the information of a single student in the database
 const updateStudent: RequestHandler = catchAsync(async (req, res) => {
-  const { studentId } = req.params;
+  const { id } = req.params;
   const { student } = req.body;
-  const result = await StudentServices.updateStudentIntoDB(studentId, student);
+  const result = await StudentServices.updateStudentIntoDB(id, student);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: `student with id ${studentId} is updated successfully.`,
+    message: `student with id ${id} is updated successfully.`,
     data: result,
   });
 });
 
 //* Deleting single student from the database
 const deleteStudent: RequestHandler = catchAsync(async (req, res) => {
-  const { studentId } = req.params;
-  const result = await StudentServices.deleteStudentFromDB(studentId);
+  const { id } = req.params;
+  const result = await StudentServices.deleteStudentFromDB(id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: `student with id ${studentId} is deleted successfully.`,
+    message: `student with id ${id} is deleted successfully.`,
     data: result,
   });
 });
