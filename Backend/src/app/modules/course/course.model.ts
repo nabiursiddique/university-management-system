@@ -1,5 +1,9 @@
 import { Schema, model } from 'mongoose';
-import { TCourse, TPreRequisiteCourses } from './course.interface';
+import {
+  TCourse,
+  TCourseFaculty,
+  TPreRequisiteCourses,
+} from './course.interface';
 
 const PreRequisiteCoursesSchema = new Schema<TPreRequisiteCourses>({
   course: {
@@ -12,7 +16,7 @@ const PreRequisiteCoursesSchema = new Schema<TPreRequisiteCourses>({
   },
 });
 
-const CourseSchema = new Schema<TCourse>({
+const courseSchema = new Schema<TCourse>({
   title: {
     type: String,
     unique: true,
@@ -41,4 +45,23 @@ const CourseSchema = new Schema<TCourse>({
   },
 });
 
-export const Course = model<TCourse>('Course', CourseSchema);
+export const Course = model<TCourse>('Course', courseSchema);
+
+const courseFacultySchema = new Schema<TCourseFaculty>({
+  course: {
+    type: Schema.Types.ObjectId,
+    ref: 'Course',
+    unique: true,
+  },
+  faculties: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Faculty',
+    },
+  ],
+});
+
+export const CourseFaculty = model<TCourseFaculty>(
+  'CourseFaculty',
+  courseFacultySchema,
+);
