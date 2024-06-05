@@ -15,14 +15,12 @@ router.get('/', CourseControllers.getAllCourses);
 
 router.get('/:id', CourseControllers.getSingleCourse);
 
-router.delete('/:id', CourseControllers.deleteSingleCourse);
+router.patch(
+  '/:id',
+  validateRequest(CourseValidations.updateCourseValidationSchema),
+  CourseControllers.updateCourse,
+);
 
-// router.patch(
-//   '/:id',
-//   validateRequest(
-//     AcademicFacultyValidation.updateAcademicFacultyValidationSchema,
-//   ),
-//   AcademicFacultyControllers.updateAcademicFaculty,
-// );
+router.delete('/:id', CourseControllers.deleteSingleCourse);
 
 export const CourseRoutes = router;
