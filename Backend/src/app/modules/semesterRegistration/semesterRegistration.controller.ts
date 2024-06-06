@@ -21,11 +21,36 @@ const createSemesterRegistration = catchAsync(
 );
 
 const getALlSemesterRegistrations = catchAsync(
-  async (req: Request, res: Response) => {},
+  async (req: Request, res: Response) => {
+    const result =
+      await SemesterRegistrationServices.getAllSemesterRegistrationFromDB(
+        req.query,
+      );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Registered semesters are retrieved successfully',
+      data: result,
+    });
+  },
 );
 
 const getSingleSemesterRegistration = catchAsync(
-  async (req: Request, res: Response) => {},
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result =
+      await SemesterRegistrationServices.getSingleSemesterRegistrationFromDB(
+        id,
+      );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Registered semester is retrieved successfully',
+      data: result,
+    });
+  },
 );
 
 const updateSemesterRegistration = catchAsync(
