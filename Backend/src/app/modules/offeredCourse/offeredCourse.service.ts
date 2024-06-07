@@ -1,10 +1,10 @@
+import { AcademicDepartment } from './../academicDepartment/academicDepartment.model';
 import httpStatus from 'http-status';
 import AppError from '../../errors/appError';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 import { TOfferedCourse } from './offeredCourse.interface';
 import { OfferedCourse } from './offeredCourse.model';
 import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
-import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
 
@@ -14,6 +14,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     academicFaculty,
     academicDepartment,
     course,
+    section,
     faculty,
   } = payload;
 
@@ -55,6 +56,29 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
 
   if (!isFacultyExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found');
+  }
+
+  // check if the department is belong to the faculty
+  const isDepartmentBelongToFaculty = await AcademicDepartment.findOne({
+    _id: academicDepartment,
+    academicFaculty,
+  });
+  if (!isDepartmentBelongToFaculty) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `${isAcademicDepartmentExists.name} does to belong to ${isAcademicFacultyExists.name}`,
+    );
+  }
+
+  // check if the same course in same section in same registered semester exists
+  const isSameOfferedCourseExistsWithSameRegisteredSemesterWithSameSection =
+    await OfferedCourse.findOne({ semesterRegistration, course, section });
+
+  if (isSameOfferedCourseExistsWithSameRegisteredSemesterWithSameSection) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Offered course with same section is already exists`,
+    );
   }
 
   const result = await OfferedCourse.create({ ...payload, academicSemester });
