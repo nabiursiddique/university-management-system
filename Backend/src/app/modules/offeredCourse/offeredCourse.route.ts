@@ -13,6 +13,8 @@ router.post(
 
 router.get('/', OfferedCourseControllers.getAllOfferedCourses);
 
+router.get('/:id', OfferedCourseControllers.getSingleOfferedCourse);
+
 router.patch(
   '/:id',
   validateRequest(OfferedCourseValidations.updateOfferedCourseValidationSchema),
