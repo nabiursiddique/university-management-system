@@ -150,7 +150,7 @@ const deleteSemesterRegistrationFromDB = async (id: string) => {
   if (semesterRegistrationStatus !== 'UPCOMING') {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `You can not update as the registered semester is ${semesterRegistrationStatus}`,
+      `You can not delete the registered semester with status ${semesterRegistrationStatus}`,
     );
   }
 
