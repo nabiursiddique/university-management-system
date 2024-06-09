@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose';
-import { TUser } from './user.interface';
+import { TUser, UserModel } from './user.interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
 
-const userSchema = new Schema<TUser>(
+const userSchema = new Schema<TUser, UserModel>(
   {
     id: {
       type: String,
@@ -40,7 +41,6 @@ const userSchema = new Schema<TUser>(
 //* Document middleware
 // pre save middleware / hook (cryptic password)
 userSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   user.password = await bcrypt.hash(
     user.password,
@@ -55,4 +55,17 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-export const User = model<TUser>('User', userSchema);
+//* static method for find a user by our custom made id
+userSchema.statics.isUserExistsByCustomId = async function (id: string) {
+  return await User.findOne({ id });
+};
+
+// static method for password comparing (auth)
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword: string,
+  hashedPassword: string,
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+export const User = model<TUser, UserModel>('User', userSchema);
