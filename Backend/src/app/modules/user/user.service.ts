@@ -18,9 +18,14 @@ import { AcademicDepartment } from '../academicDepartment/academicDepartment.mod
 import { TFaculty } from '../faculty/faculty.interface';
 import { Admin } from '../admin/admin.model';
 import { USER_ROLE } from './user.constant';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 //* create student
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+const createStudentIntoDB = async (
+  file: any,
+  password: string,
+  payload: TStudent,
+) => {
   //  Create a user object
   const userData: Partial<TUser> = {};
 
@@ -49,6 +54,13 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     }
     userData.id = await generateStudentId(admissionSemester);
 
+    // creating image name and sending the image path
+    const imageName = `${userData.id}${payload?.name?.firstName}`;
+    const path = file?.path;
+
+    // send image to cloudinary
+    const { secure_url } = await sendImageToCloudinary(imageName, path);
+
     // Create a user (transaction-01)
     const newUser = await User.create([userData], { session });
 
@@ -59,6 +71,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     // set id, _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
+    payload.profileImg = secure_url;
 
     // Create a student (transaction-02)
     const newStudent = await Student.create([payload], { session });
