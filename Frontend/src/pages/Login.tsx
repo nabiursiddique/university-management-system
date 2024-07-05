@@ -1,11 +1,11 @@
 import { Button } from "antd";
 import { FieldValues, useForm } from "react-hook-form";
-import { useLoginMutation } from "../redux/features/auth/authApi";
 import { useAppDispatch } from "../redux/hooks";
 import { setUser, TUser } from "../redux/features/auth/authSlice";
 import { verifyToken } from "../utils/verifyToken";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import authApi from "../redux/features/auth/authApi";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const Login = () => {
     },
   });
 
-  const [login] = useLoginMutation();
+  const [login] = authApi.useLoginMutation();
 
   const onSubmit = async (data: FieldValues) => {
     const toastId = toast.loading("Logging In");
