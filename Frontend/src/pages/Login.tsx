@@ -1,28 +1,35 @@
-import { Button } from "antd";
-import { FieldValues, useForm } from "react-hook-form";
+import { Button, Row } from "antd";
+import { FieldValues } from "react-hook-form";
 import { useAppDispatch } from "../redux/hooks";
 import { setUser, TUser } from "../redux/features/auth/authSlice";
 import { verifyToken } from "../utils/verifyToken";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import authApi from "../redux/features/auth/authApi";
+import UMForm from "../components/form/UMForm";
+import UMInput from "../components/form/UMInput";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
-      userId: "A-0001",
-      password: "admin123",
-    },
-  });
+  // const { register, handleSubmit } = useForm({
+  //   defaultValues: {
+  //     userId: "A-0001",
+  //     password: "admin123",
+  //   },
+  // });
+
+  const defaultValues = {
+    userId: "A-0001",
+    password: "admin123",
+  };
 
   const [login] = authApi.useLoginMutation();
 
   const onSubmit = async (data: FieldValues) => {
+    console.log(data);
     const toastId = toast.loading("Logging In");
-
     try {
       const userInfo = {
         id: data.userId,
@@ -39,17 +46,13 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label htmlFor="id">ID:</label>
-        <input type="text" id="id" {...register("userId")} />
-      </div>
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input type="text" id="password" {...register("password")} />
-      </div>
-      <Button htmlType="submit">Submit</Button>
-    </form>
+    <Row justify="center" align="middle" style={{ height: "100vh" }}>
+      <UMForm onSubmit={onSubmit} defaultValues={defaultValues}>
+        <UMInput type="text" name="userId" label="ID:" />
+        <UMInput type="text" name="password" label="Password" />
+        <Button htmlType="submit">Submit</Button>
+      </UMForm>
+    </Row>
   );
 };
 
