@@ -4,6 +4,8 @@ import { Button, Col, Flex } from 'antd';
 import UMSelect from '../../../components/form/UMSelect';
 import { semesterOptions } from '../../../constants/semester';
 import { monthOptions } from '../../../constants/global';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { academicSemesterSchema } from '../../../schemas/academicManagement.schema';
 
 const currentYear = new Date().getFullYear();
 const yearOptions = [0, 1, 2, 3, 4].map((number) => ({
@@ -28,7 +30,10 @@ const CreateAcademicSemester = () => {
   return (
     <Flex justify='center' align='center'>
       <Col span={6}>
-        <UMForm onSubmit={onSubmit}>
+        <UMForm
+          onSubmit={onSubmit}
+          resolver={zodResolver(academicSemesterSchema)}
+        >
           <UMSelect label='Name' name='name' options={semesterOptions} />
           <UMSelect label='Year' name='year' options={yearOptions} />
           <UMSelect
