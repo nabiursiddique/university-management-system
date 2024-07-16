@@ -20,12 +20,15 @@ const createAcademicSemester: RequestHandler = catchAsync(async (req, res) => {
 
 //* Getting all the semester
 const getAllAcademicSemesters: RequestHandler = catchAsync(async (req, res) => {
-  const result = await AcademicSemesterServices.getAllAcademicSemestersFromDB();
+  const result = await AcademicSemesterServices.getAllAcademicSemestersFromDB(
+    req.query,
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'All academic semesters are retrieved',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 
