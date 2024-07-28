@@ -1,69 +1,31 @@
-import { FieldValues, SubmitHandler } from 'react-hook-form';
+import { Controller, FieldValues, SubmitHandler } from 'react-hook-form';
 import UMForm from '../../../components/form/UMForm';
 import UMInput from '../../../components/form/UMInput';
-import { Button, Col, Divider, Row } from 'antd';
+import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import UMSelect from '../../../components/form/UMSelect';
 import { bloodGroupOptions, genderOptions } from '../../../constants/global';
 import UMDatePicker from '../../../components/form/UMDatePicker';
-import { useGetAllSemestersQuery } from '../../../redux/features/admin/academicManagement.api';
-
-const studentData = {
-  password: 'student123',
-  student: {
-    name: {
-      firstName: 'Mr.Student778',
-      middleName: '',
-      lastName: 'Good',
-    },
-    gender: 'male',
-    dateOfBirth: '1998-05-15',
-    bloodGroup: 'A+',
-
-    email: 'mrstudent778@gamil.com',
-    contactNumber: '234-567-8901',
-    emergencyContactNo: '876-543-2109',
-    presentAddress: '789 Oak St, Uptown, UT 56789',
-    permanentAddress: '321 Maple St, Oldtown, OT 54321',
-
-    guardian: {
-      fatherName: 'Robert Smith',
-      fatherOccupation: 'Architect',
-      fatherContactNo: '234-567-8902',
-      motherName: 'Linda Smith',
-      motherOccupation: 'Nurse',
-      motherContactNo: '234-567-8903',
-    },
-
-    localGuardian: {
-      name: 'Michael Johnson',
-      occupation: 'Businessman',
-      contactNo: '234-567-8904',
-      address: '654 Cedar St, Midtown, MT 67890',
-    },
-
-    admissionSemester: '66580eb542e81c8dd573724b',
-    academicDepartment: '6661df15e7d4c3c5f40417e1',
-  },
-};
+import {
+  useGetAcademicDepartmentsQuery,
+  useGetAllSemestersQuery,
+} from '../../../redux/features/admin/academicManagement.api';
+import { useAddStudentMutation } from '../../../redux/features/admin/userManagement.api';
 
 //! This is only for development
 //! should be removed
 const studentDefaultValues = {
   name: {
-    firstName: 'Mr.Student778',
+    firstName: 'Mr.Student420',
     middleName: '',
     lastName: 'Good',
   },
   gender: 'male',
-
-  bloodGroup: 'A+',
-
-  email: 'mrstudent778@gamil.com',
+  email: 'mrstudent420@gamil.com',
   contactNumber: '234-567-8901',
   emergencyContactNo: '876-543-2109',
+  bloodGroup: 'A+',
   presentAddress: '789 Oak St, Uptown, UT 56789',
   permanentAddress: '321 Maple St, Oldtown, OT 54321',
-
   guardian: {
     fatherName: 'Robert Smith',
     fatherOccupation: 'Architect',
@@ -72,37 +34,54 @@ const studentDefaultValues = {
     motherOccupation: 'Nurse',
     motherContactNo: '234-567-8903',
   },
-
   localGuardian: {
     name: 'Michael Johnson',
     occupation: 'Businessman',
     contactNo: '234-567-8904',
     address: '654 Cedar St, Midtown, MT 67890',
   },
-
-  admissionSemester: 'Autumn 2023',
-  academicDepartment: '6661df15e7d4c3c5f40417e1',
+  // admissionSemester: '66580eb542e81c8dd573724b',
+  // academicDepartment: '6661df15e7d4c3c5f40417e1',
+  // profileImg: 'http://example.com/profile2.jpg',
 };
 
 const CreateStudent = () => {
+  const [addStudent, { data, error }] = useAddStudentMutation();
+
+  console.log({ data, error });
+
   const { data: sData, isLoading: sIsLoading } =
     useGetAllSemestersQuery(undefined);
+
+  const { data: dData, isLoading: dIsLoading } =
+    useGetAcademicDepartmentsQuery(undefined);
 
   const semesterOptions = sData?.data?.map((item) => ({
     value: item._id,
     label: `${item.name} ${item.year}`,
   }));
 
+  const departmentOptions = dData?.data?.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+    const studentData = {
+      password: 'student123',
+      student: data,
+    };
 
-    // const formData = new FormData();
+    const formData = new FormData();
 
-    // formData.append('data', JSON.stringify(data));
+    formData.append('data', JSON.stringify(studentData));
+    formData.append('file', data.image);
+
+    addStudent(formData);
 
     //! This is for development
     //! Just for checking
-    // console.log(Object.fromEntries(formData));
+    console.log(Object.fromEntries(formData));
   };
 
   return (
@@ -133,6 +112,21 @@ const CreateStudent = () => {
                 label='Blood Group'
               />
             </Col>
+            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
+              <Controller
+                name='image'
+                render={({ field: { onChange, value, ...field } }) => (
+                  <Form.Item label='Picture'>
+                    <Input
+                      type='file'
+                      value={value?.fileName}
+                      {...field}
+                      onChange={(e) => onChange(e.target.files?.[0])}
+                    />
+                  </Form.Item>
+                )}
+              />
+            </Col>
           </Row>
           <Divider>Contact Info</Divider>
           <Row gutter={8}>
@@ -140,12 +134,12 @@ const CreateStudent = () => {
               <UMInput type='text' name='email' label='Email' />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <UMInput type='text' name='contact' label='Contact' />
+              <UMInput type='text' name='contactNumber' label='Contact' />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <UMInput
                 type='text'
-                name='emergencyContact'
+                name='emergencyContactNo'
                 label='Emergency Contact'
               />
             </Col>
@@ -247,12 +241,12 @@ const CreateStudent = () => {
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              {/* <UMSelect
+              <UMSelect
                 options={departmentOptions}
                 disabled={dIsLoading}
                 name='academicDepartment'
                 label='Admission Department'
-              /> */}
+              />
             </Col>
           </Row>
           <Button htmlType='submit'>Submit</Button>

@@ -4,10 +4,11 @@ import { Controller } from 'react-hook-form';
 type TUMSelectProps = {
   label: string;
   name: string;
-  options: { value: string; label: string; disabled?: boolean }[];
+  options: { value: string; label: string; disabled?: boolean }[] | undefined;
+  disabled?: boolean;
 };
 
-const UMSelect = ({ label, name, options }: TUMSelectProps) => {
+const UMSelect = ({ label, name, options, disabled }: TUMSelectProps) => {
   return (
     <Controller
       name={name}
@@ -18,6 +19,7 @@ const UMSelect = ({ label, name, options }: TUMSelectProps) => {
             {...field}
             options={options}
             size='large'
+            disabled={disabled}
           />
           {error && <small style={{ color: 'red' }}>{error.message}</small>}
         </Form.Item>
