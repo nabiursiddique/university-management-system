@@ -8,60 +8,6 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import { studentSearchableFields } from './student.constant';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  // const queryObj = { ...query }; //*copy
-  //* {email:{$regex:query.searchTerm, $options:i}}
-  //* {presentAddress:{$regex:query.searchTerm, $options:i}}
-  // const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
-  // let searchTerm = '';
-  // if (query?.searchTerm) {
-  //   searchTerm = query?.searchTerm as string;
-  // }
-  // const searchQuery = Student.find({
-  //   $or: studentSearchableFields.map((field) => ({
-  //     [field]: { $regex: searchTerm, $options: 'i' },
-  //   })),
-  // });
-  //* filtering
-  // const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
-  // excludeFields.forEach((element) => delete queryObj[element]);
-  // const filterQuery = searchQuery
-  //   .find(queryObj)
-  //   .populate('admissionSemester')
-  //   .populate({
-  //     path: 'academicDepartment',
-  //     populate: {
-  //       path: 'academicFaculty',
-  //     },
-  //   });
-  //* sorting
-  // let sort = '-createdAt';
-  // if (query?.sort) {
-  //   sort = query.sort as string;
-  // }
-  // const sortQuery = filterQuery.sort(sort);
-  //* pagination and limiting
-  // let page = 1;
-  // let limit = 1;
-  // let skip = 0;
-  // if (query.limit) {
-  //   limit = Number(query.limit);
-  // }
-  // if (query.page) {
-  //   page = Number(query.page);
-  //   skip = (page - 1) * limit;
-  // }
-  // const paginateQuery = sortQuery.skip(skip);
-  // const limitQuery = paginateQuery.limit(limit);
-  //* field limiting
-  //todo: fields:'name,email'
-  //todo: fields:'name email'
-  // let fields = '-__v';
-  // if (query.fields) {
-  //   fields = (query.fields as string).split(',').join(' ');
-  // }
-  // const fieldQuery = await limitQuery.select(fields);
-  // return fieldQuery;
-
   const studentQuery = new QueryBuilder(
     Student.find()
       .populate('user')

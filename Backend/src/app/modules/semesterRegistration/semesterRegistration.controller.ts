@@ -30,8 +30,9 @@ const getALlSemesterRegistrations = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Registered semesters are retrieved successfully',
-      data: result,
+      message: 'Semester Registration is retrieved successfully !',
+      meta: result.meta,
+      data: result.result,
     });
   },
 );
