@@ -2,6 +2,8 @@ import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { OfferedCourseControllers } from './offeredCourse.controller';
 import { OfferedCourseValidations } from './offeredCourse.validation';
+import { USER_ROLE } from '../user/user.constant';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
@@ -12,6 +14,12 @@ router.post(
 );
 
 router.get('/', OfferedCourseControllers.getAllOfferedCourses);
+
+router.get(
+  '/my-offered-courses',
+  auth(USER_ROLE.student),
+  OfferedCourseControllers.getMyOfferedCourses,
+);
 
 router.get('/:id', OfferedCourseControllers.getSingleOfferedCourse);
 
