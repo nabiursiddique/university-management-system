@@ -1,9 +1,9 @@
-import MainLayout from "./components/layout/MainLayout";
-import ProtectedRoute from "./components/layout/ProtectedRoute";
+import MainLayout from './components/layout/MainLayout';
+import ProtectedRoute from './components/layout/ProtectedRoute';
 
 const App = () => {
   return (
-    <ProtectedRoute>
+    <ProtectedRoute role={undefined}>
       <MainLayout />
     </ProtectedRoute>
   );
