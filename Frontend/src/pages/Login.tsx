@@ -22,7 +22,7 @@ const Login = () => {
 
   const defaultValues = {
     userId: '2031020002',
-    password: 'student123',
+    password: 'student1234',
   };
 
   const [login] = authApi.useLoginMutation();
@@ -36,10 +36,16 @@ const Login = () => {
         password: data.password,
       };
       const res = await login(userInfo).unwrap();
+
       const user = verifyToken(res.data.accessToken) as TUser;
       dispatch(setUser({ user: user, token: res.data.accessToken }));
       toast.success('Logged In', { id: toastId, duration: 2000 });
-      navigate(`/${user.role}/dashboard`);
+
+      if (res.data.needsPasswordChange) {
+        navigate(`/change-password`);
+      } else {
+        navigate(`/${user.role}/dashboard`);
+      }
     } catch (err) {
       toast.error('Something went wrong', { id: toastId, duration: 2000 });
     }
