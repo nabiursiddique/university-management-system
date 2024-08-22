@@ -21,14 +21,13 @@ const Login = () => {
   // });
 
   const defaultValues = {
-    userId: '2031020002',
-    password: 'student1234',
+    userId: 'F-0001',
+    password: 'faculty1234',
   };
 
   const [login] = authApi.useLoginMutation();
 
   const onSubmit = async (data: FieldValues) => {
-    console.log(data);
     const toastId = toast.loading('Logging In');
     try {
       const userInfo = {
